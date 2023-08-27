@@ -1,0 +1,36 @@
+{{ if (and (eq .chezmoi.os "linux") (ne .chezmoi.arch "arm64") (ne .chezmoi.osRelease.id "centos")) -}}
+#!/usr/bin/env bash
+
+ASDF_INSTALL="$HOME/.asdf"
+ASDF_VERSION="v0.12.0"
+
+if [[ -d "$ASDF_INSTALL" ]]
+then
+  cd "$ASDF_INSTALL"
+  git pull
+  git checkout "$ASDF_VERSION"
+else
+  git clone https://github.com/asdf-vm/asdf.git "$ASDF_INSTALL" --branch="$ASDF_VERSION"
+fi
+
+source ${ASDF_INSTALL}/asdf.sh
+
+asdf_plugin_add() {
+  if ! asdf plugin-list | grep -Fq "$1"
+  then
+    asdf plugin-add "$1"
+  else
+    echo "asdf plugin $1 already installed"
+  fi
+}
+
+asdf_plugin_add python
+asdf_plugin_add neovim
+asdf_plugin_add direnv
+
+asdf install
+asdf direnv setup --shell bash --version latest
+
+asdf reshim
+
+{{ end -}}
