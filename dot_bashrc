@@ -83,4 +83,8 @@ export NVM_DIR="$HOME/.nvm"
 
 export VISUAL=nvim
 export EDITOR="$VISUAL"
+
 . "$HOME/.cargo/env"
+
+[ -s "$HOME/.asdf/asdf.sh" ] && source "$HOME/.asdf/asdf.sh"
+[ -s "$HOME/.asdf/completions/asdf.bash" ] && source "$HOME/.asdf/completions/asdf.bash"
