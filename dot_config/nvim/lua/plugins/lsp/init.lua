@@ -24,7 +24,7 @@ return {
       },
     },
     config = function(plugin, opts)
-      require("base.lsp.servers").setup(plugin, opts)
+      require("plugins.lsp.servers").setup(plugin, opts)
     end,
   },
   {

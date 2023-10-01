@@ -15,7 +15,7 @@ vim.opt.rtp:prepend(lazypath)
 -- Configure lazy.nvim
 require("lazy").setup {
   spec = {
-    { import = "base" },
+    { import = "plugins" },
     { import = "pde" },
   },
   defaults = { lazy = true, version = nil },

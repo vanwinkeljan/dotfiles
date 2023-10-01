@@ -51,7 +51,7 @@ return {
       },
       setup = {
         lua_ls = function(_, _)
-          local lsp_utils = require "base.lsp.utils"
+          local lsp_utils = require "plugins.lsp.utils"
           lsp_utils.on_attach(function(client, buffer)
             -- stylua: ignore
             if client.name == "lua_ls" then
