@@ -1,8 +1,19 @@
 local M = {}
 
 local lsp_utils = require "plugins.lsp.utils"
+local icons = require "config.icons"
 
 local function lsp_init()
+  local signs = {
+    { name = "DiagnosticSignError", text = icons.diagnostics.Error },
+    { name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
+    { name = "DiagnosticSignHint", text = icons.diagnostics.Hint },
+    { name = "DiagnosticSignInfo", text = icons.diagnostics.Info },
+  }
+  for _, sign in ipairs(signs) do
+    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
+  end
+
   -- LSP handlers configuration
   local config = {
     float = {
@@ -12,10 +23,15 @@ local function lsp_init()
     },
 
     diagnostic = {
+      -- virtual_text = false,
+      -- virtual_text = { spacing = 4, prefix = "●" },
       virtual_text = {
         severity = {
           min = vim.diagnostic.severity.ERROR,
         },
+      },
+      signs = {
+        active = signs,
       },
       underline = false,
       update_in_insert = false,
@@ -28,6 +44,7 @@ local function lsp_init()
         header = "",
         prefix = "",
       },
+      -- virtual_lines = true,
     },
   }
 
@@ -69,10 +86,15 @@ function M.setup(_, opts)
     require("lspconfig")[server].setup(server_opts)
   end
 
+  -- Add bun for Node.js-based servers
+  -- local lspconfig_util = require "lspconfig.util"
+  -- local add_bun_prefix = require("plugins.lsp.bun").add_bun_prefix
+  -- lspconfig_util.on_setup = lspconfig_util.add_hook_before(lspconfig_util.on_setup, add_bun_prefix)
+
   -- get all the servers that are available thourgh mason-lspconfig
-  local have_mason, mlsp = pcall(require, "mason-lspconfig")
+  local has_mason, mlsp = pcall(require, "mason-lspconfig")
   local all_mslp_servers = {}
-  if have_mason then
+  if has_mason then
     all_mslp_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
   end
 
@@ -89,7 +111,7 @@ function M.setup(_, opts)
     end
   end
 
-  if have_mason then
+  if has_mason then
     mlsp.setup { ensure_installed = ensure_installed }
     mlsp.setup_handlers { setup }
   end

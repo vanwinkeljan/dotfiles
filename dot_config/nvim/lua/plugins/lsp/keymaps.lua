@@ -4,13 +4,17 @@ function M.on_attach(client, buffer)
   local self = M.new(client, buffer)
 
   -- stylua: ignore
-  self:map("gd", function() require("telescope.builtin").lsp_definitions({ reuse_win = true }) end, { desc = "Goto Definition" })
+  self:map("gd", function() require("telescope.builtin").lsp_definitions({ reuse_win = true }) end,
+    { desc = "Goto Definition" })
   self:map("gr", "Telescope lsp_references", { desc = "References" })
+  self:map("gD", "Lspsaga peek_definition", { desc = "Peek Definition" })
   -- stylua: ignore
-  self:map("gI", function() require("telescope.builtin").lsp_implementations({ reuse_win = true }) end, { desc = "Goto Implementation" })
+  self:map("gI", function() require("telescope.builtin").lsp_implementations({ reuse_win = true }) end,
+    { desc = "Goto Implementation" })
   -- stylua: ignore
-  self:map("gy", function() require("telescope.builtin").lsp_type_definitions({ reuse_win = true }) end, { desc = "Goto Type Definition" })
-  self:map("K", vim.lsp.buf.hover, { desc = "Hover" })
+  self:map("gy", function() require("telescope.builtin").lsp_type_definitions({ reuse_win = true }) end,
+    { desc = "Goto Type Definition" })
+  self:map("K", "Lspsaga hover_doc", { desc = "Hover" })
   self:map("gK", vim.lsp.buf.signature_help, { desc = "Signature Help", has = "signatureHelp" })
   self:map("]d", M.diagnostic_goto(true), { desc = "Next Diagnostic" })
   self:map("[d", M.diagnostic_goto(false), { desc = "Prev Diagnostic" })
@@ -18,12 +22,12 @@ function M.on_attach(client, buffer)
   self:map("[e", M.diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
   self:map("]w", M.diagnostic_goto(true, "WARNING"), { desc = "Next Warning" })
   self:map("[w", M.diagnostic_goto(false, "WARNING"), { desc = "Prev Warning" })
-  self:map("<leader>la", vim.lsp.buf.code_action, { desc = "Code Action", mode = { "n", "v" }, has = "codeAction" })
+  self:map("<leader>la", "Lspsaga code_action", { desc = "Code Action", mode = { "n", "v" }, has = "codeAction" })
 
   local format = require("plugins.lsp.format").format
   self:map("<leader>lf", format, { desc = "Format Document", has = "documentFormatting" })
   self:map("<leader>lf", format, { desc = "Format Range", mode = "v", has = "documentRangeFormatting" })
-  self:map("<leader>lr", vim.lsp.buf.rename, { expr = true, desc = "Rename", has = "rename" })
+  self:map("<leader>lr", M.rename, { expr = true, desc = "Rename", has = "rename" })
 
   self:map("<leader>ls", require("telescope.builtin").lsp_document_symbols, { desc = "Document Symbols" })
   self:map("<leader>lS", require("telescope.builtin").lsp_dynamic_workspace_symbols, { desc = "Workspace Symbols" })
@@ -50,6 +54,14 @@ function M:map(lhs, rhs, opts)
     ---@diagnostic disable-next-line: no-unknown
     { silent = true, buffer = self.buffer, expr = opts.expr, desc = opts.desc }
   )
+end
+
+function M.rename()
+  if pcall(require, "inc_rename") then
+    return ":IncRename " .. vim.fn.expand "<cword>"
+  else
+    vim.lsp.buf.rename()
+  end
 end
 
 function M.diagnostic_goto(next, severity)
