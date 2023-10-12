@@ -21,7 +21,7 @@ return {
   {
     "williamboman/mason.nvim",
     opts = function(_, opts)
-      vim.list_extend(opts.ensure_installed, { "codelldb" })
+      vim.list_extend(opts.ensure_installed, { "clangd", "codelldb" })
     end,
   },
   {
@@ -30,28 +30,31 @@ return {
     opts = {
       servers = {
         clangd = {
-          server = {
-            root_dir = function(...)
-              -- using a root .clang-format or .clang-tidy file messes up projects, so remove them
-              return require("lspconfig.util").root_pattern("compile_commands.json", "compile_flags.txt", "configure.ac", ".git")(...)
-            end,
-            capabilities = {
-              offsetEncoding = { "utf-16" },
-            },
-            cmd = {
-              "clangd",
-              "--background-index",
-              "--clang-tidy",
-              "--header-insertion=iwyu",
-              "--completion-style=detailed",
-              "--function-arg-placeholders",
-              "--fallback-style=llvm",
-            },
-            init_options = {
-              usePlaceholders = true,
-              completeUnimported = true,
-              clangdFileStatus = true,
-            },
+          root_dir = function(...)
+            -- using a root .clang-format or .clang-tidy file messes up projects, so remove them
+            return require("lspconfig.util").root_pattern(
+              "compile_commands.json",
+              "compile_flags.txt",
+              "configure.ac",
+              ".git"
+            )(...)
+          end,
+          capabilities = {
+            offsetEncoding = { "utf-16" },
+          },
+          cmd = {
+            "clangd",
+            "--background-index",
+            "--clang-tidy",
+            "--header-insertion=iwyu",
+            "--completion-style=detailed",
+            "--function-arg-placeholders",
+            "--fallback-style=llvm",
+          },
+          init_options = {
+            usePlaceholders = true,
+            completeUnimported = true,
+            clangdFileStatus = true,
           },
           extensions = {
             inlay_hints = {
@@ -82,11 +85,7 @@ return {
       },
       setup = {
         clangd = function(_, opts)
-          require("clangd_extensions").setup {
-            server = opts.server,
-            extensions = opts.extensions,
-          }
-          return true
+          require("clangd_extensions").setup(opts.extensions)
         end,
       },
     },
