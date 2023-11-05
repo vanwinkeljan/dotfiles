@@ -1,0 +1,14 @@
+{{ if (eq .chezmoi.os "linux") -}}
+#!/usr/bin/env bash
+
+RUSTUP_INSTALL="$HOME/.rustup"
+
+if [[ ! -d "$RUSTUP_INSTALL" ]]
+then
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  source "$HOME/.cargo/env"
+  rustup completions bash >> $HOME/.bash_completion.d/rustup
+  rustup completions bash cargo >> $HOME/.bash_completion.d/cargo
+fi
+
+{{ end -}}
