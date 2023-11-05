@@ -93,5 +93,7 @@ export EDITOR="$VISUAL"
 
 command -v direnv >/dev/null 2>&1 && eval "$(direnv hook bash)"
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
 # Source, if any, local configuration after the common .bashrc
 [ -f $HOME/.bashrc.local ] && source $HOME/.bashrc.local

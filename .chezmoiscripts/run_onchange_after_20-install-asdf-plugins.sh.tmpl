@@ -24,9 +24,11 @@ asdf_plugin_add() {
   fi
 }
 
-asdf_plugin_add python
-asdf_plugin_add neovim
 asdf_plugin_add direnv
+asdf_plugin_add fd
+asdf_plugin_add fzf
+asdf_plugin_add neovim
+asdf_plugin_add python
 
 asdf install
 asdf direnv setup --shell bash --version latest
