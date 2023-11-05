@@ -91,5 +91,7 @@ export EDITOR="$VISUAL"
 [ -s "$HOME/.asdf/asdf.sh" ] && source "$HOME/.asdf/asdf.sh"
 [ -s "$HOME/.asdf/completions/asdf.bash" ] && source "$HOME/.asdf/completions/asdf.bash"
 
+command -v direnv >/dev/null 2>&1 && eval "$(direnv hook bash)"
+
 # Source, if any, local configuration after the common .bashrc
 [ -f $HOME/.bashrc.local ] && source $HOME/.bashrc.local
