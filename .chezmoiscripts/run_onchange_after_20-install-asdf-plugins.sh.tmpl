@@ -1,7 +1,7 @@
 {{ if (and (eq .chezmoi.os "linux") (ne .chezmoi.arch "arm64") (ne .chezmoi.osRelease.id "centos")) -}}
 #!/usr/bin/env bash
 
-ASDF_DATA_DIR="$HOME/.asdf"
+export ASDF_DATA_DIR="$HOME/.asdf"
 ASDF_VERSION="v0.16.5"
 
 mkidr -p "$HOME/bin"
@@ -12,9 +12,9 @@ tar xvzf asdf-${ASDF_VERSION}-linux-amd64.tar.gz
 rm asdf-${ASDF_VERSION}-linux-amd64.tar.gz
 
 asdf_plugin_add() {
-  if ! asdf plugin list | grep -Fq "$1"
+  if ! $HOME/bin/asdf plugin list | grep -Fq "$1"
   then
-    asdf plugin add "$1"
+    $HOME/bin/asdf plugin add "$1"
   else
     echo "asdf plugin $1 already installed"
   fi
@@ -26,8 +26,8 @@ asdf_plugin_add fzf
 asdf_plugin_add nodejs
 asdf_plugin_add python
 
-asdf install
+$HOME/bin/asdf install
 
-asdf reshim
+$HOME/bin/asdf reshim
 
 {{ end -}}
