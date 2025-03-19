@@ -88,12 +88,13 @@ export EDITOR="$VISUAL"
 
 . "$HOME/.cargo/env"
 
-[ -s "$HOME/.asdf/asdf.sh" ] && source "$HOME/.asdf/asdf.sh"
-[ -s "$HOME/.asdf/completions/asdf.bash" ] && source "$HOME/.asdf/completions/asdf.bash"
+export ASDF_DATA_DIR="$HOME/.asdf"
+export PATH="$ASDF_DATA_DIR/shims:$PATH"
 
-command -v direnv >/dev/null 2>&1 && eval "$(direnv hook bash)"
+command -v direnv > /dev/null 2>&1 && eval "$(direnv hook bash)"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # Source, if any, local configuration after the common .bashrc
 [ -f $HOME/.bashrc.local ] && source $HOME/.bashrc.local
+source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/bashrc"
