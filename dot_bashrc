@@ -97,4 +97,3 @@ command -v direnv > /dev/null 2>&1 && eval "$(direnv hook bash)"
 
 # Source, if any, local configuration after the common .bashrc
 [ -f $HOME/.bashrc.local ] && source $HOME/.bashrc.local
-source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/bashrc"
